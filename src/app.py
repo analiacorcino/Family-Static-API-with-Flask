@@ -26,17 +26,50 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/members', methods=['GET'])
-def handle_hello():
+def handle_all_members():
 
     # this is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
-    response_body = {
-        "hello": "world",
-        "family": members
-    }
+
+    return jsonify(members), 200
+
+@app.route('/member/<int:member_id>', methods=['GET'])
+def handle_one_member(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    member = jackson_family.get_member(member_id)
+
+    return jsonify(member), 200
 
 
-    return jsonify(response_body), 200
+@app.route('/member/<int:member_id>', methods=['DELETE'])
+def handle_delete_members(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    member = jackson_family.delete_member(member_id)
+
+    return "El familiar se eliminó", 200
+
+
+@app.route('/member', methods=['POST'])
+def handle_add_member(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    body = json.loads(request.data)
+    member = jackson_family.add_member(body)
+
+    return "El familiar fue agregado correctamente", 200
+
+
+
+@app.route('/member/<int:member_id>', methods=['PUT'])
+def handle_update_member(member_id):
+
+    # this is how you can use the Family datastructure by calling its methods
+    body = json.loads(request.data)
+    member = jackson_family.update_member(member_id, body)
+
+    return "El familiar fue actualizado correctamente", 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
